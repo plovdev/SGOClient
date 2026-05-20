@@ -11,6 +11,31 @@
 
     <artifactId>reports</artifactId>
 
+    <name>SGOClient</name>
+    <description>Java SGOClient for sgo.volganet closed api.</description>
+    <url>https://github.com/plovdev/SGOClient</url>
+
+    <licenses>
+        <license>
+            <name>The Unlicense</name>
+            <url>http://unlicense.org</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Anton</name>
+            <email>ap67253100@gmail.com</email>
+            <organization>PlovDev</organization>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://://github.com</connection>
+        <developerConnection>scm:git:ssh://github.com:plovdev/SGOClient.git</developerConnection>
+        <url>https://github.com/plovdev/SGOClient/tree/main</url>
+    </scm>
+
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>

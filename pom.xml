@@ -8,6 +8,7 @@
     <artifactId>sgo-client-root</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
+
     <name>SGOClient</name>
     <description>Java SGOClient for sgo.volganet closed api.</description>
     <url>https://github.com/plovdev/SGOClient</url>
@@ -27,18 +28,18 @@
         </developer>
     </developers>
 
+    <scm>
+        <connection>scm:git:git://://github.com</connection>
+        <developerConnection>scm:git:ssh://github.com:plovdev/SGOClient.git</developerConnection>
+        <url>https://github.com/plovdev/SGOClient/tree/main</url>
+    </scm>
+
     <modules>
         <module>core</module>
         <module>example</module>
         <module>tools</module>
         <module>reports</module>
     </modules>
-
-    <scm>
-        <connection>scm:git:git://://github.com</connection>
-        <developerConnection>scm:git:ssh://github.com:plovdev/SGOClient.git</developerConnection>
-        <url>https://github.com/plovdev/SGOClient/tree/main</url>
-    </scm>
 
     <properties>
         <revision>2.6</revision>
@@ -146,33 +147,6 @@
                                 <arg>loopback</arg>
                             </gpgArguments>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.1</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.6.3</version>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
