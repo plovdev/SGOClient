@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>io.github.anton-1488.sgo-client</groupId>
+        <groupId>io.github.plovdev.sgo-client</groupId>
         <artifactId>sgo-client-root</artifactId>
         <version>${revision}</version>
     </parent>
@@ -24,12 +24,7 @@
             <version>${slf4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.github.anton-1488.sgo-client</groupId>
-            <artifactId>core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.anton-1488.sgo-client</groupId>
+            <groupId>io.github.plovdev.sgo-client</groupId>
             <artifactId>reports</artifactId>
             <version>${project.version}</version>
         </dependency>
