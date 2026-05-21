@@ -31,9 +31,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://://github.com</connection>
-        <developerConnection>scm:git:ssh://github.com:plovdev/SGOClient.git</developerConnection>
-        <url>https://github.com/plovdev/SGOClient/tree/main</url>
+        <connection>scm:git:https://github.com/plovdev/SGOClient.git</connection>
+        <developerConnection>scm:git:git@github.com:plovdev/SGOClient.git</developerConnection>
+        <url>https://github.com/plovdev/SGOClient</url>
     </scm>
 
     <properties>

@@ -1,31 +1,26 @@
 package org.plovdev.sgoclient.example;
 
 import org.plovdev.sgoclient.core.SGOClient;
+import org.plovdev.sgoclient.core.SGOSession;
 import org.plovdev.sgoclient.core.dto.Schools;
 import org.plovdev.sgoclient.core.security.AuthKeys;
 import org.plovdev.sgoclient.reports.SGOReportCreator;
-import org.plovdev.sgoclient.reports.SGOReportOutputType;
 import org.plovdev.sgoclient.reports.dto.ReportFilter;
 import org.plovdev.sgoclient.reports.dto.SGOReport;
-import org.plovdev.sgoclient.reports.dto.requests.StudentTotalReportRequest;
+import org.plovdev.sgoclient.reports.dto.requests.JournalAccessReportRequest;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDateTime;
 
 public class Main {
     public static void main(String[] args) {
-        try (SGOClient client = new SGOClient(AuthKeys.load("MY_NAME", "MY_PASS"))) {
-            client.createSession(Schools.MAOU6);
-            LocalDateTime now = LocalDateTime.now();
+        AuthKeys keys = AuthKeys.load("MY_NAME", "MY_PASS");
 
-            ReportFilter filter1 = ReportFilter.userFilter("1870886");
-            ReportFilter filter2 = ReportFilter.classFilter("458655");
-            ReportFilter filter3 = ReportFilter.termFilter("145282");
-            ReportFilter filter4 = ReportFilter.periodFilter(now.minusMonths(2), now);
+        try (SGOClient client = new SGOClient()) {
+            SGOSession session = client.createSession(keys, Schools.MAOU6);
 
             SGOReportCreator creator = new SGOReportCreator(client);
-            SGOReport report = creator.createReport(new StudentTotalReportRequest(SGOReportOutputType.HTML, filter1, filter2, filter3, filter4));
+            SGOReport report = creator.createReport(new JournalAccessReportRequest(ReportFilter.classIUPFilter("458655")));
             Files.write(Path.of("report.html"), report.getReportBody());
         } catch (Exception e) {
             throw new RuntimeException(e);

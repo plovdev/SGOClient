@@ -19,8 +19,9 @@ public class SGOWebSocketClient implements AutoCloseable {
         this.client = Objects.requireNonNull(client);
     }
 
-    public synchronized void connect(@NonNull SGORequest<?> req, SGOWebSocketListener listener) {
-        Request request = new Request.Builder().url(SGOHttpPath.BASE_WS_HOST + req.endpoint()).build();
+    public synchronized void connect(String baseHost, @NonNull SGORequest<?> req, SGOWebSocketListener listener) {
+        String sgoHost = String.format(SGOHttpPath.BASE_WS_HOST, baseHost);
+        Request request = new Request.Builder().url(sgoHost + req.endpoint()).build();
         webSocket = client.newWebSocket(request, new WebSocketListener() {
             @Override
             public void onOpen(@NonNull WebSocket webSocket, @NonNull Response response) {

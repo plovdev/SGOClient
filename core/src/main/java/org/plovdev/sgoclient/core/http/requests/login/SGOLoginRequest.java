@@ -122,8 +122,6 @@ public class SGOLoginRequest extends SGORequest<SGOLogin> {
     public Map<String, String> headers() {
         Map<String, String> headers = new HashMap<>();
         headers.put("X-Requested-With", "XMLHttpRequest");
-        headers.put("Referer", SGOHttpPath.BASE_HOST + "authorize/login?back=1");
-        headers.put("Origin", SGOHttpPath.BASE_HOST);
         return headers;
     }
 

@@ -33,30 +33,36 @@ import static org.plovdev.sgoclient.core.utils.Globals.GSON;
 
 public class SGOClient implements AutoCloseable {
     private static final Logger log = LoggerFactory.getLogger(SGOClient.class);
-    private final CookieStore cookieStore = new CookieStore();
-    private OkHttpClient HTTP_CLIENT = Globals.HTTP_CLIENT_BUILDER.cookieJar(cookieStore).build();
-    private final SGOSessionRefresher refresher = new SGOSessionRefresher(this);
+    private static final String DEFAULT_HOST = "sgo.volganet";
 
-    private final AuthKeys authKeys;
+    private final CookieStore cookieStore = new CookieStore();
+    private final SGOSessionRefresher refresher = new SGOSessionRefresher(this);
+    private final String baseHost;
+    private OkHttpClient HTTP_CLIENT = Globals.HTTP_CLIENT_BUILDER.cookieJar(cookieStore).build();
+
     private volatile SGOSession currentSession;
 
-    public SGOClient(AuthKeys keys) {
-        authKeys = keys;
+    public SGOClient() {
+        this(DEFAULT_HOST);
     }
 
-    public AuthKeys getAuthKeys() {
-        return authKeys;
+    public SGOClient(String host) {
+        this.baseHost = host;
     }
 
     public SGOSession getCurrentSession() {
         return currentSession;
     }
 
-    public SGOSession createSession(SGOSchool school) {
-        return createSession(school, ClientRole.STUDENT);
+    public String getBaseHost() {
+        return baseHost;
     }
 
-    public synchronized SGOSession createSession(SGOSchool school, ClientRole role) {
+    public SGOSession createSession(AuthKeys keys, SGOSchool school) {
+        return createSession(keys, school, ClientRole.STUDENT);
+    }
+
+    public synchronized SGOSession createSession(AuthKeys authKeys, SGOSchool school, ClientRole role) {
         if (currentSession != null) {
             return currentSession;
         }
@@ -103,8 +109,10 @@ public class SGOClient implements AutoCloseable {
     }
 
     private @NonNull Request buildRequest(@NonNull SGORequest<?> request) {
+        String sgoHost = String.format(SGOHttpPath.BASE_HOST, baseHost);
+
         Request.Builder builder = new Request.Builder();
-        builder.url(SGOHttpPath.BASE_HOST + request.endpoint());
+        builder.url(sgoHost + request.endpoint());
 
         Map<String, String> defHeaders = SGORequest.getDefaultHeaders();
         defHeaders.put("Content-Type", request.contentType());
@@ -121,7 +129,7 @@ public class SGOClient implements AutoCloseable {
         if (request.method() == HttpMethod.GET) {
             String params = request.params();
             if (params != null && !params.trim().isEmpty()) {
-                builder.url(SGOHttpPath.BASE_HOST + request.endpoint() + "?" + params);
+                builder.url(sgoHost + request.endpoint() + "?" + params);
             }
             return builder.get().build();
         } else if (request.method() == HttpMethod.POST) {

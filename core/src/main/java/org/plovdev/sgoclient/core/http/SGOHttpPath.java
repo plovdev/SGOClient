@@ -1,8 +1,8 @@
 package org.plovdev.sgoclient.core.http;
 
 public interface SGOHttpPath {
-    String BASE_HOST = "http://sgo.volganet.ru/";
-    String BASE_WS_HOST = "ws://sgo.volganet.ru/";
+    String BASE_HOST = "http://%s.ru/";
+    String BASE_WS_HOST = "ws://%s.ru/";
 
     String LOGIN_DATA = "webapi/auth/getdata";
     String LOGUOT = "webapi/auth/logout";

@@ -6,20 +6,20 @@ import org.jspecify.annotations.NonNull;
 import org.plovdev.sgoclient.core.SGOClient;
 import org.plovdev.sgoclient.core.SGOSession;
 import org.plovdev.sgoclient.core.dto.SGOContext;
-import org.plovdev.sgoclient.exceptions.ReportGenerationException;
-import org.plovdev.sgoclient.reports.dto.SGOReport;
-import org.plovdev.sgoclient.reports.requests.LoadSGOReportRequest;
 import org.plovdev.sgoclient.core.utils.Globals;
 import org.plovdev.sgoclient.core.ws.SGOWebSocketClient;
 import org.plovdev.sgoclient.core.ws.WebSocketListenerAdapter;
+import org.plovdev.sgoclient.exceptions.ReportGenerationException;
 import org.plovdev.sgoclient.reports.dto.ReportCreated;
 import org.plovdev.sgoclient.reports.dto.ReportCreatingProgress;
+import org.plovdev.sgoclient.reports.dto.SGOReport;
 import org.plovdev.sgoclient.reports.dto.SGOReportQueue;
 import org.plovdev.sgoclient.reports.dto.requests.SGOReportRequest;
 import org.plovdev.sgoclient.reports.listeners.ReportCreatingProgressListener;
 import org.plovdev.sgoclient.reports.listeners.ReportTargetStatus;
 import org.plovdev.sgoclient.reports.requests.CreateSGOReportQueue;
 import org.plovdev.sgoclient.reports.requests.InitSignalRQueue;
+import org.plovdev.sgoclient.reports.requests.LoadSGOReportRequest;
 import org.plovdev.sgoclient.reports.requests.ws.SGONegotinateRequest;
 import org.plovdev.sgoclient.reports.requests.ws.SGOSubmitReportTask;
 import org.slf4j.Logger;
@@ -80,7 +80,20 @@ public class SGOReportCreator {
         log.debug("Start creating report");
         CompletableFuture<SGOReport> reportFuture = new CompletableFuture<>();
         SGOWebSocketClient wsClient = client.createSGOWebSocketClient();
-        wsClient.connect(new SGONegotinateRequest(client.getCurrentSession().getSgoLogin().getAt()), new WebSocketListenerAdapter() {
+        wsClient.connect(client.getBaseHost(), new SGONegotinateRequest(client.getCurrentSession().getSgoLogin().getAt()), new WebSocketListenerAdapter() {
+            @Override
+            public void onOpen() {
+                try {
+                    wsClient.execute(new InitSignalRQueue());
+                    SGOReportQueue queue = client.execute(new CreateSGOReportQueue(reportRequest.getReportFilters(), getParams(client), reportRequest.getReportType(), reportRequest.getOutputType()));
+                    log.debug("Report queue: {}", queue);
+                    wsClient.execute(new SGOSubmitReportTask(queue.getTaskId()));
+                } catch (Exception e) {
+                    wsClient.close();
+                    reportFuture.completeExceptionally(e);
+                }
+            }
+
             @Override
             public void onMessage(String message) {
                 if (message.equals("{}")) return;
@@ -114,16 +127,6 @@ public class SGOReportCreator {
                 wsClient.close();
             }
         });
-
-        try {
-            wsClient.execute(new InitSignalRQueue());
-            SGOReportQueue queue = client.execute(new CreateSGOReportQueue(reportRequest.getReportFilters(), getParams(client), reportRequest.getReportType(), reportRequest.getOutputType()));
-            log.debug("Report queue: {}", queue);
-            wsClient.execute(new SGOSubmitReportTask(queue.getTaskId()));
-        } catch (Exception e) {
-            wsClient.close();
-            reportFuture.completeExceptionally(e);
-        }
         return reportFuture;
     }
 
