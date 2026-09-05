@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>example</artifactId>
+    <packaging>jar</packaging>
 
     <name>SGOClient</name>
     <description>Java SGOClient for sgo.volganet closed api.</description>

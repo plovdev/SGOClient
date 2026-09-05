@@ -9,6 +9,7 @@
         <version>${revision}</version>
     </parent>
 
+    <packaging>jar</packaging>
     <artifactId>reports</artifactId>
 
     <name>SGOClient</name>
