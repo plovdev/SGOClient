@@ -154,7 +154,7 @@ public class SGOClient implements AutoCloseable {
         OkHttpClient.Builder builder = HTTP_CLIENT.newBuilder();
         builder.proxy(Objects.requireNonNullElse(proxy, Proxy.NO_PROXY));
         if (authenticator != null) {
-            builder.authenticator(authenticator);
+            builder.proxyAuthenticator(authenticator);
         }
         HTTP_CLIENT = builder.build();
     }
